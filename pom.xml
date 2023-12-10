@@ -20,25 +20,6 @@
 		<java.version>17</java.version>
 	</properties>
 
-	<profiles>
-		<profile>
-			<id>Auth</id>
-			<properties>
-				<spring.boot.mainclass>ru.job4j.auth.Job4jAuthApplication</spring.boot.mainclass>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
-			<id>UrlApp</id>
-			<properties>
-				<spring.boot.mainclass>ru.job4j.auth.url.UrlApp</spring.boot.mainclass>
-			</properties>
-		</profile>
-	</profiles>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -25,6 +25,10 @@ public class PersonService {
         return personRepository.findById(id);
     }
 
+    public Optional<Person> findByUsername(String username) {
+        return personRepository.findByUsername(username);
+    }
+
     public Person save(Person person) {
         return personRepository.save(person);
     }
