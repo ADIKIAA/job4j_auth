@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.job4j.auth.domain.Person;
 import ru.job4j.auth.repository.PersonRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +15,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public List<Person> findAll() {
-        List<Person> rsl = new ArrayList<>();
-        personRepository.findAll().forEach(rsl::add);
-        return rsl;
+        return findAll();
     }
 
     public Optional<Person> findById(int id) {
@@ -30,11 +27,26 @@ public class PersonService {
     }
 
     public Person save(Person person) {
-        return personRepository.save(person);
+        Person rsl;
+        try {
+            rsl = personRepository.save(person);
+        } catch (Exception e) {
+            e.printStackTrace();
+            rsl = null;
+        }
+        return rsl;
     }
 
-    public void delete(Person person) {
-        personRepository.delete(person);
+    public boolean delete(Person person) {
+        boolean rsl = true;
+        try {
+            personRepository.delete(person);
+        } catch (Exception e) {
+            e.printStackTrace();
+            rsl = false;
+        }
+        return rsl;
+
     }
 
 }

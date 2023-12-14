@@ -35,49 +35,32 @@ public class PersonController {
 
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
-        ResponseEntity<Person> rsl;
-        try {
-            this.personService.save(person);
-            rsl = ResponseEntity.ok().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            rsl = ResponseEntity.status(HttpStatus.CONFLICT).build();
+        person.setPassword(encoder.encode(person.getPassword()));
+        var savedPerson = personService.save(person);
+        if (savedPerson == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        return rsl;
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
-        ResponseEntity<Void> rsl;
-        try {
-            this.personService.save(person);
-            rsl = ResponseEntity.ok().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            rsl = ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        var updatedPerson = personService.save(person);
+        if (updatedPerson == null) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return rsl;
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        ResponseEntity<Void> rsl;
-        try {
-            Person person = new Person();
-            person.setId(id);
-            this.personService.delete(person);
-            rsl = ResponseEntity.ok().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            rsl = ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        Person person = new Person();
+        person.setId(id);
+        boolean deleted = personService.delete(person);
+        if (deleted) {
+            return ResponseEntity.ok().build();
         }
-        return rsl;
-    }
-
-    @PostMapping("sign-up")
-    public void signUp(@RequestBody Person person) {
-        person.setPassword(encoder.encode(person.getPassword()));
-        personService.save(person);
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
 }
