@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.job4j.auth.domain.Person;
 import ru.job4j.auth.repository.PersonRepository;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +37,22 @@ public class PersonService {
             rsl = null;
         }
         return rsl;
+    }
+
+    public Person patch(Person person) {
+        var oldPerson = findById(person.getId()).get();
+        var newFields = Arrays.stream(person.getClass().getDeclaredFields())
+                .filter(f -> f != null).toList();
+        for (Field f : newFields) {
+            try {
+                oldPerson.getClass().getField(f.getName()).set(oldPerson, f);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return save(oldPerson);
     }
 
     public boolean delete(Person person) {

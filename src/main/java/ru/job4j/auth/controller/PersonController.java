@@ -70,6 +70,19 @@ public class PersonController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/")
+    public ResponseEntity<Person> patch(@RequestBody Person person) {
+        var optionalPerson = personService.findById(person.getId());
+        if (optionalPerson.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        var patchedPerson = personService.patch(person);
+        if (patchedPerson == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_MODIFIED);
+        }
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         Person person = new Person();
